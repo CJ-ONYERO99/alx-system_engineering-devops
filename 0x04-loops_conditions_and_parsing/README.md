@@ -18,4 +18,3 @@ This project covers programming in bash using loops, conditions and parsing tech
 12. Script that that displays the content of the file /etc/passwd, using the while loop + IFS.
 13. Script that displays the visitor IP along with the HTTP status code from the Apache log file
 14. Script that groups visitors by IP and HTTP status code, and displays this data.
-
