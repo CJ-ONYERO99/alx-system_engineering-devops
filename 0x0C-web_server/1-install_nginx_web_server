@@ -23,6 +23,6 @@ echo "server {
 sudo kill -s HUP $(sudo cat /var/run/nginx.pid)
 
 # Confirm successful installation
-curl -sI 127.0.0.1 | grep "HTTP/1.1 200 OK"
+curl -sI localhost | grep "HTTP/1.1 200 OK"
 
 # End of script
