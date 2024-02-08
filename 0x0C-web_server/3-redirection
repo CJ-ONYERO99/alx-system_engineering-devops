@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 # Configure nginx to redirect /redirect_me with a 301 Moved Permanently
 sudo sed -i '/^}/i \
     location /redirect_me { \
