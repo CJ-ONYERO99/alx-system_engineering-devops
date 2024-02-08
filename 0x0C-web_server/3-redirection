@@ -21,5 +21,5 @@ nginx_pid=$(cat /var/run/nginx.pid)
 if [ -z "$nginx_pid" ]; then
     service nginx start
 else
-    kill -s HUP $nginx_pid
+    kill -s HUP "$nginx_pid"
 fi
