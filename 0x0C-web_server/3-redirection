@@ -1,14 +1,25 @@
 #!/usr/bin/env bash
-# Configure nginx to redirect /redirect_me with a 301 Moved Permanently
-sudo sed -i '/^}/i \
-    location /redirect_me { \
-        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4; \
-    }' /etc/nginx/sites-available/default
+# Installs, configures, and starts the server
+apt-get update
+apt-get -y install nginx
+ufw allow 'Nginx HTTP'
+mkdir -p /var/www/html/
+chmod -R 755 /var/www
+echo 'Hello World!' > /var/www/html/index.html
+
+# Define the redirection configuration
+REDIRECT_CONFIG=\
+"location /redirect_me {
+    return 301 https://www.example.com/new-page;
+}"
+
+# Add redirection configuration to the server block
+sed -i "/server {/a $REDIRECT_CONFIG" /etc/nginx/sites-enabled/default
 
 # Restart nginx without using systemctl
-sudo kill -s HUP $(sudo cat /var/run/nginx.pid)
-
-# Confirm redirection configuration
-curl -sI 127.0.0.1/redirect_me | grep "HTTP/1.1 301 Moved Permanently"
-
-# End of script
+nginx_pid=$(cat /var/run/nginx.pid)
+if [ -z "$nginx_pid" ]; then
+    service nginx start
+else
+    kill -s HUP $nginx_pid
+fi
