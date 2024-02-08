@@ -1,11 +1,5 @@
 #!/usr/bin/env bash
 
-# Update package list
-sudo apt-get update
-
-# Install nginx
-sudo apt-get install -y nginx
-
 # Configure nginx to redirect /redirect_me with a 301 Moved Permanently
 sudo sed -i '/^}/i \
     location /redirect_me { \
