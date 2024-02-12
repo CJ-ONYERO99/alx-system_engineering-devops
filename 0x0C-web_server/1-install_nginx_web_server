@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# Install nginx on web server; Nginx should be listening on port 8
 
 # Update package index
 apt-get update
