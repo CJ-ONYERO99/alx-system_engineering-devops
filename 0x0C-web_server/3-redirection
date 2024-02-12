@@ -1,25 +1,40 @@
 #!/usr/bin/env bash
-# Installs, configures, and starts the server
+
+# Install Nginx and allow HTTP traffic
 apt-get update
 apt-get -y install nginx
 ufw allow 'Nginx HTTP'
+
+# Create a directory for your web content
 mkdir -p /var/www/html/
 chmod -R 755 /var/www
 echo 'Hello World!' > /var/www/html/index.html
 
 # Define the redirection configuration
 REDIRECT_CONFIG=\
-"location /redirect_me {
-    return 301 https://www.google.com/;
+"server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    root /var/www/html;
+    index index.html index.htm index.nginx-debian.html;
+    server_name _;
+
+    location / {
+        try_files \$uri \$uri/ =404;
+    }
+
+    location /redirect_me {
+        return 301 https://www.example.com/new-page;
+    }
 }"
 
-# Add redirection configuration to the server block
-sed -i "/server {/a $REDIRECT_CONFIG" /etc/nginx/sites-enabled/default
+# Add the redirection configuration to the default server block
+echo "$REDIRECT_CONFIG" > /etc/nginx/sites-enabled/default
 
-# Restart nginx without using systemctl
+# Restart Nginx without using systemctl
 nginx_pid=$(cat /var/run/nginx.pid)
 if [ -z "$nginx_pid" ]; then
     service nginx start
 else
-    kill -s HUP "$nginx_pid"
+    service nginx restart
 fi
