@@ -18,7 +18,7 @@ REDIRECT_CONFIG="server {
     server_name _;
 
     location /redirect_me {
-        return 301 https://www.example.com;
+        rewrite ^ https://www.example.com$request_uri? permanent;
     }
 }"
 
