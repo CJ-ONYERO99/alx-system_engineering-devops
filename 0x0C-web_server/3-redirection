@@ -10,7 +10,7 @@ echo 'Hello World!' > /var/www/html/index.html
 # Define the redirection configuration
 REDIRECT_CONFIG=\
 "location /redirect_me {
-    return 301 https://www.example.com/new-page;
+    return 301 https://www.google.com/;
 }"
 
 # Add redirection configuration to the server block
