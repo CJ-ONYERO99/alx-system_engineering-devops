@@ -15,14 +15,17 @@ echo "server {
 
     location / {
         echo 'Hello World!' > /var/www/html/index.html;
-        return 200;
     }
-}" | sudo tee /etc/nginx/sites-available/default
+}" | sudo tee /etc/nginx/sites-available/default > /dev/null
 
 # Restart nginx without using systemctl
 sudo kill -s HUP $(sudo cat /var/run/nginx.pid)
 
 # Confirm successful installation
-curl -sI localhost | grep "HTTP/1.1 200 OK"
+response=$(curl -sI localhost | grep "HTTP/1.1 200 OK")
 
-# End of script
+if [ -n "$response" ]; then
+    echo "Hello World!"
+else
+    echo "Installation failed"
+fi
