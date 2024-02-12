@@ -23,13 +23,10 @@ REDIRECT_CONFIG=\
     }
 }"
 
-# Add the redirection configuration to the default server block
-echo "$REDIRECT_CONFIG" > /etc/nginx/sites-enabled/default
+bash -c "echo -e '$SERVER_CONFIG' > /etc/nginx/sites-enabled/default"
 
-# Restart Nginx without using systemctl
-nginx_pid=$(cat /var/run/nginx.pid)
-if [ -z "$nginx_pid" ]; then
-    service nginx start
+if [ "$(pgrep -c nginx)" -le 0 ]; then
+	service nginx start
 else
-    service nginx restart
+	service nginx restart
 fi
