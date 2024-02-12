@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 # Install Nginx and allow HTTP traffic
 apt-get update
 apt-get -y install nginx
@@ -24,7 +23,7 @@ REDIRECT_CONFIG=\
     }
 
     location /redirect_me {
-        return 301 https://www.example.com/new-page;
+        return 301 https://www.google.com;
     }
 }"
 
