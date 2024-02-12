@@ -35,7 +35,7 @@ EOF
 service nginx restart
 
 # Verify if custom 404 page contains the required string
-if grep -q "Ceci n'est pas une page" /usr/share/nginx/html/404.html; then
+if grep -q "Ceci n'est pas une page" /var/www/html/404.html; then
     echo "Custom 404 page contains 'Ceci n'est pas une page'"
 else
     echo "Custom 404 page does not contain 'Ceci n'est pas une page'"
