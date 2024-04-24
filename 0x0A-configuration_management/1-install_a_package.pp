@@ -1,12 +1,6 @@
-class flask_install {
-  package { 'python3-pip':
-    ensure => installed,
-  }
+# Install a flask package
 
-  exec { 'install_flask':
-    command => '/usr/bin/pip3 install flask==2.1.0',
-    require => Package['python3-pip'],
-  }
+package {'Flask':
+  ensure   => '2.1.0',
+  provider => 'pip3'
 }
-
-include flask_install
