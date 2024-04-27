@@ -1,34 +1,15 @@
 # Install a flask package
 
-# Remove existing Flask and Werkzeug installations
-exec { 'remove_existing_flask_and_werkzeug':
-  command => '/usr/bin/pip3 uninstall -y Flask Werkzeug',
-  path    => ['/usr/bin'],
+exec { 'update':
+  command => '/usr/bin/apt-get update'
 }
 
-# Install Python 3 pip
 package { 'python3-pip':
   ensure => installed,
+  require => Exec['update'],
 }
 
-# Install Flask and Werkzeug with specified versions
-exec { 'install_flask_and_werkzeug':
-  command => '/usr/bin/pip3 install -q Flask==2.1.0 Werkzeug==2.0.2',
-  path    => ['/usr/bin'],
+exec { 'install_flask':
+  command => '/usr/bin/pip3 install flask==2.1.0',
   require => Package['python3-pip'],
-}
-
-# Add /usr/local/bin to PATH
-file_line { 'add_flask_path':
-  ensure => present,
-  path   => '/etc/environment',
-  line   => 'PATH="$PATH:/usr/local/bin"',
-  notify => Exec['reload_environment'],
-}
-
-# Reload environment variables
-exec { 'reload_environment':
-  command     => 'export PATH="$PATH:/usr/local/bin"',
-  path        => ['/usr/bin'],
-  refreshonly => true,
 }
