@@ -28,7 +28,7 @@ file_line { 'add_flask_path':
 
 # Reload environment variables
 exec { 'reload_environment':
-  command     => 'source /etc/environment',
+  command     => 'export PATH="$PATH:/usr/local/bin"',
   path        => ['/usr/bin'],
   refreshonly => true,
 }
