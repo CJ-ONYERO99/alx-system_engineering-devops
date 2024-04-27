@@ -1,5 +1,11 @@
 # Install a flask package
 
+# Remove existing Flask and Werkzeug installations
+exec { 'remove_existing_flask_and_werkzeug':
+  command => '/usr/bin/pip3 uninstall -y Flask Werkzeug',
+  path    => ['/usr/bin'],
+}
+
 # Install Python 3 pip
 package { 'python3-pip':
   ensure => installed,
