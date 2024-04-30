@@ -11,11 +11,11 @@ apt-get -y install haproxy
 # edit config file
 server_config=\
 "
-frontend  cyberionetics.tech_frontend
+frontend  cyberionetics_frontend
         bind *:80
         mode http
-        default_backend  cyberionetics.tech_backend
-backend cyberionetics.tech_backend
+        default_backend  cyberionetics_backend
+backend cyberionetics_backend
         balance roundrobin
         server 428422-web-01 18.235.255.90:80 check
         server 428422-web-02 34.224.16.161:80 check
