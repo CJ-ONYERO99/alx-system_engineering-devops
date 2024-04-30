@@ -11,14 +11,14 @@ apt-get -y install haproxy
 # edit config file
 server_config=\
 "
-frontend  CJ-ONYERO99_frontend
+frontend  cyberionetics.tech_frontend
         bind *:80
         mode http
         default_backend besthor_backend
-backend bCJ-ONYERO99_backend
+backend cyberionetics.tech_backend
         balance roundrobin
-        server 176572-web-01 54.165.168.252:80 check
-        server 176572-web-02 34.237.91.136:80 check
+        server 428422-web-01 18.235.255.90:80 check
+        server 428422-web-02 34.224.16.161:80 check
 "
 echo "$server_config" | sudo tee -a /etc/haproxy/haproxy.cfg
 
