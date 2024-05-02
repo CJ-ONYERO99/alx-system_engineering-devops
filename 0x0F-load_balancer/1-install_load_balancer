@@ -2,7 +2,6 @@
 # Update package lists
 sudo apt update
 sudo apt-get -y install --no-install-recommends software-properties-common
-sudo add-apt-repository -y ppa:vbernat/haproxy-2.4
 sudo apt-get -y install haproxy
 
 # Configure hostname
@@ -31,7 +30,7 @@ defaults
     mode http
     option httplog
     balance roundrobin
-    option httpcheck
+    option httpchk
 
 frontend http-in
     bind *:80
@@ -39,7 +38,7 @@ frontend http-in
 
 backend webservers
     option httpchk
-    http-check uri /healthcheck path / OK
+    httpchk uri /healthcheck path / OK
     balance roundrobin
     server web-01 428422-web-01:80 weight 1 maxconn 200
     server web-02 428422-web-02:80 weight 1 maxconn 200
