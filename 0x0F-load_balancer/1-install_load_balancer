@@ -1,49 +1,25 @@
 #!/usr/bin/env bash
-# Update package lists
-sudo apt update
+# Update the system
+sudo apt-get update -y
 
-# Configure hostname (replace 428422 with your actual student ID)
-HOSTNAME="${428422}-lb-01"
-sudo hostnamectl set-hostname "$HOSTNAME"
+# Install HAProxy
+sudo apt-get install -y haproxy
 
-# Install HAproxy
-sudo apt install haproxy
-
-# Backup default configuration file
+# Backup the original configuration file
 sudo cp /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg.bak
 
-# Configure HAproxy
-cat << EOF > /etc/haproxy/haproxy.cfg
-global
-  log /dev/log local0 info
-  maxconn 4000
-  user haproxy
-  group haproxy
-  stats timeout 2m
-  stats socket /var/lib/haproxy/stats.sock
-  # Removed 'stats realm' and 'stats auth' lines (not valid for your version)
+# Write the configuration
+echo "
+frontend http_front
+   bind *:80
+   stats uri /haproxy?stats
+   default_backend http_back
 
-defaults
-  mode http
-  option httplog
-  balance roundrobin
-  option httpchk
+backend http_back
+   balance roundrobin
+   server web-01 428422-web-01:80 check
+   server web-02 428422-web-02:80 check
+" | sudo tee /etc/haproxy/haproxy.cfg
 
-frontend http-in
-  bind *:80
-  default_backend webservers
-
-backend webservers
-  option httpchk
-  httpchk uri /healthcheck  # Use httpchk uri instead of http-check uri
-  balance roundrobin
-  server web-01 428422-web-01:80 weight 1 maxconn 200
-  server web-02 428422-web-02:80 weight 1 maxconn 200
-EOF
-
-# Enable and start HAproxy service (using Upstart)
-service reload-configuration  # Reload Upstart configuration after making changes
-service haproxy start
-
-# Verify service status
-service haproxy restart
+# Restart HAProxy to apply the changes
+sudo service haproxy restart
