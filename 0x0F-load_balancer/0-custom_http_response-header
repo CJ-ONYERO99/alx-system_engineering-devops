@@ -1,18 +1,25 @@
 #!/usr/bin/env bash
 
-# Update Nginx and its dependencies
-sudo apt-get update nginx
-sudo apt-get install -y nginx
+# Update Nginx package lists
+sudo apt-get update
+
+# Check if Nginx is already installed (informative)
+if [[ $(dpkg-query -l nginx | grep installed) ]]; then
+  echo "Nginx is already installed."
+else
+  # Install Nginx if not present
+  sudo apt-get install -y nginx
+fi
 
 # Add custom response header (X-Served-By)
-# This line adds the header "X-Served-By" with the server's hostname value
-# after the line containing "server_name _;" in the default Nginx configuration file
 sudo sed -i "/server_name _/a add_header X-Served-By $HOSTNAME;" /etc/nginx/sites-enabled/default
 
 # Test Nginx configuration for errors
-# This checks for syntax errors in the Nginx configuration before restarting
 sudo nginx -t
 
-# Restart Nginx service
-# This restarts the Nginx service to apply the configuration changes
-sudo systemctl restart nginx
+# Check systemd availability (use appropriate restart command)
+if systemctl status systemd &> /dev/null; then
+  sudo systemctl restart nginx
+else
+  sudo service nginx restart
+fi
