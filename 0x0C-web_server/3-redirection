@@ -1,16 +1,41 @@
 #!/usr/bin/env bash
 #  A Script that configures a new Ubuntu machine to Perform a 301-redirection
 
-# Upadating Packages before Installations
+# Updating Packages Before Installations
 sudo apt-get update
 sudo apt-get install -y nginx
+sudo apt install -y sed
 
 # Creating an index.html page
 echo "Hello World!" | sudo tee /var/www/html/index.html
 
-# Performing a 301 Redirection
-string_for_replacement="server_name _;\n\trewrite ^\/redirect_me https:\/\/github.com\/CJ-ONYERO99 permanent;"
-sudo sed -i "s/server_name _;/$string_for_replacement/" /etc/nginx/sites-enabled/default
+# Configure Nginx for redirection
+SERVER_BLOCK_PATH="/etc/nginx/sites-available/default"
+
+# Use sed to modify the server block configuration file
+sudo sed -i '/location \/ {' -e '
+    $a \
+        rewrite ^ /https://github.com/CJ-ONYERO99/ permanent redirection; \
+        return 301; \
+' $SERVER_BLOCK_PATH
+
+# Note: The above sed command uses:
+#  - '/location \/ {' : Matches the beginning of the location block for "/"
+#  - '$a' : Appends new lines after the matched line
+#  - 'rewrite ^ /permanent_target הרתעה קבועה;': Rewrites all requests to "/" to "/permanent_target" (with informative message in Hebrew for clarity)
+#  - 'return 301;': Returns a 301 Moved Permanently status code
+
+# Reload Nginx to apply the changes
+sudo systemctl reload nginx
+
+# Test the redirection (replace "your_server_ip" with the actual IP)
+curl -sI http://your_server_ip/redirect_me/
+
+# Expected output:
+# HTTP/1.1 301 Moved Permanently
+# ...
+
+echo "Redirection configured successfully!"
 
 # Restarting Nginx service
 sudo service nginx restart
