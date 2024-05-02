@@ -26,7 +26,7 @@ sudo sed -i '/location \/ {' -e '
 #  - 'return 301;': Returns a 301 Moved Permanently status code
 
 # Reload Nginx to apply the changes
-sudo systemctl reload nginx
+sudo service nginx restart
 
 # Test the redirection (replace "your_server_ip" with the actual IP)
 curl -sI http://your_server_ip/redirect_me/
@@ -36,6 +36,3 @@ curl -sI http://your_server_ip/redirect_me/
 # ...
 
 echo "Redirection configured successfully!"
-
-# Restarting Nginx service
-sudo service nginx restart
