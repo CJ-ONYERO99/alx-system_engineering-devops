@@ -1,59 +1,52 @@
-#!/usr/bin/env bash
-# install load balancer
+#!/bin/bash
+# Update package lists
+sudo apt update
 
+# Configure hostname (replace [STUDENT_ID] with your actual ID)
+HOSTNAME="$428422-lb-01"
+sudo hostnamectl set-hostname "$HOSTNAME"
 
-echo -e "Updating and doing some minor checks...\n"
+# Install HAproxy
+sudo apt install haproxy
 
-function install() {
-	command -v "$1" &> /dev/null
+# Backup default configuration file
+sudo cp /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg.bak
 
-	#shellcheck disable=SC2181
-	if [ $? -ne 0 ]; then
-		echo -e "	Installing: $1\n"
-		sudo apt-get update -y -qq && \
-			sudo apt-get install -y "$1" -qq
-		echo -e "\n"
-	else
-		echo -e "	${1} is already installed.\n"
-	fi
-}
+# Configure HAproxy
 
-install haproxy #install haproxy
+# Replace 'your_strong_password' with a strong password
+cat << EOF > /etc/haproxy/haproxy.cfg
+global
+    log /dev/log local0 info
+    maxconn 4000
+    user haproxy
+    group haproxy
+    stats timeout 2m
+    stats socket /var/lib/haproxy/stats.sock
+    stats realm HAProxy Statistics
+    stats auth your_strong_password
 
-echo -e "\nSetting up some minor stuff.\n"
-
-# backup default server config file
-sudo cp /etc/haproxy/haproxy.cfg haproxy_default.backup
-
-server_config=\
-"
 defaults
-  mode http
-  timeout client 15s
-  timeout connect 10s
-  timeout server 15s
-  timeout http-request 10s
-
-frontend cyberionetics.tech
-    bind *:80
-    default_backend web_servers
-
-backend web_servers
+    mode http
+    option httplog
     balance roundrobin
-    server 428422-web-01 18.235.255.90:80 check
-    server 428422-web-02 34.224.16.161:80 check
-"
+    option httpcheck
 
-# shellcheck disable=SC2154
-echo "$server_config" | sudo dd status=none of=/etc/haproxy/haproxy.cfg
+frontend http-in
+    bind *:80
+    default_backend webservers
 
-# enable haproxy to be started by init script
-echo "ENABLED=1" | sudo dd status=none of=/etc/default/haproxy
+backend webservers
+    option httpchk
+    http-check uri /healthcheck path / OK
+    balance roundrobin
+    server web-01 428422-web-01:80 weight 1 maxconn 200
+    server web-02 428422-web-02:80 weight 1 maxconn 200
+EOF
 
-echo "configured - Roundrobin On web-01 & web-02"
+# Enable and start HAproxy service
+sudo systemctl enable haproxy
+sudo systemctl start haproxy
 
-if [ "$(pgrep -c haproxy)" -le 0 ]; then
-	sudo service haproxy start
-else
-	sudo service haproxy restart
-fi
+# Verify service status
+sudo systemctl status haproxy
