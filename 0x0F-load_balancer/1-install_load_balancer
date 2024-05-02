@@ -2,7 +2,7 @@
 # Update package lists
 sudo apt update
 
-# Configure hostname (replace [STUDENT_ID] with your actual ID)
+# Configure hostname
 HOSTNAME="$428422-lb-01"
 sudo hostnamectl set-hostname "$HOSTNAME"
 
@@ -13,8 +13,6 @@ sudo apt install haproxy
 sudo cp /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg.bak
 
 # Configure HAproxy
-
-# Replace 'your_strong_password' with a strong password
 cat << EOF > /etc/haproxy/haproxy.cfg
 global
     log /dev/log local0 info
@@ -24,7 +22,7 @@ global
     stats timeout 2m
     stats socket /var/lib/haproxy/stats.sock
     stats realm HAProxy Statistics
-    stats auth your_strong_password
+    stats auth HAPlb01
 
 defaults
     mode http
