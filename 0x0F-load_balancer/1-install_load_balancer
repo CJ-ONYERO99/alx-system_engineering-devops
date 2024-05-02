@@ -43,8 +43,8 @@ backend webservers
 EOF
 
 # Enable and start HAproxy service
-sudo systemctl enable haproxy
-sudo systemctl start haproxy
+sudo service enable haproxy
+sudo service start haproxy
 
 # Verify service status
-sudo systemctl status haproxy
+sudo service status haproxy
