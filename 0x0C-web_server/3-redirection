@@ -13,9 +13,9 @@ echo "Hello World!" | sudo tee /var/www/html/index.html
 SERVER_BLOCK_PATH="/etc/nginx/sites-available/default"
 
 # Use sed to modify the server block configuration file
-sudo sed -i '/location \/ {' -e '
+sudo sed -i "/location \/ {" -e '
     $a \
-        rewrite ^ /https://github.com/CJ-ONYERO99/ permanent redirection; \
+        rewrite ^ /permanent_target הרתעה קבועה; \
         return 301; \
 ' $SERVER_BLOCK_PATH
 
