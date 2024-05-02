@@ -4,8 +4,8 @@ apt-get update
 apt-get install -y haproxy
 
 # Set the actual hostnames
-WEB_SERVER_1_HOSTNAME="428422-web-01"
-WEB_SERVER_2_HOSTNAME="428422-web-02"
+WEB_SERVER_1_HOSTNAME=$(hostname)-web-01
+WEB_SERVER_2_HOSTNAME=$(hostname)-web-02
 
 # Backup the default configuration file
 cp /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg.bak
