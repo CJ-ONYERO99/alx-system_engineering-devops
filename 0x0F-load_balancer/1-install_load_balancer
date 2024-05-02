@@ -43,8 +43,8 @@ backend webservers
 EOF
 
 # Enable and start HAproxy service (using Upstart)
-initctl reload-configuration  # Reload Upstart configuration after making changes
-start haproxy
+service reload-configuration  # Reload Upstart configuration after making changes
+service haproxy start
 
 # Verify service status
-status haproxy
+service haproxy restart
