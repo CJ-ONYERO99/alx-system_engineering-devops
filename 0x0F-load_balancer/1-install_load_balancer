@@ -3,7 +3,7 @@
 sudo apt update
 
 # Configure hostname
-HOSTNAME="$428422-lb-01"
+HOSTNAME="${428422}-lb-01"
 sudo hostnamectl set-hostname "$HOSTNAME"
 
 # Install HAproxy
