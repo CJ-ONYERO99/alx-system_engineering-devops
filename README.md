@@ -1,45 +1,69 @@
-# alx-system_engineering-devops
-0x00. Shell, basics
+# HTTPS SSL
 
-task 0 - a script that prints the absolute path name of the current working directory.
+![](https://www.x-cart.com/img/8527/http_to_https-1.webp)
 
-task 1 - a script to Display the contents list of your current directory.
+> SSL stands for Secure Sockets Layer and, in short, it's the standard technology for keeping an internet connection secure and safeguarding any sensitive data that is being sent between two systems, preventing criminals from reading and modifying any information transferred, including potential personal details. The two systems can be a server and a client (for example, a shopping website and browser) or server to server (for example, an application with personal identifiable information or with payroll information).
 
-task 2 - a script that changes the working directory to the user’s home directory.
+> HTTPS (Hyper Text Transfer Protocol Secure) appears in the URL when a website is secured by an SSL certificate. The details of the certificate, including the issuing authority and the corporate name of the website owner, can be viewed by clicking on the lock symbol on the browser bar.
 
-task 3 - a script to Display current directory contents in a long format
+__What happens when you don’t secure your website traffic?__
+<img src='https://s3.amazonaws.com/intranet-projects-files/holbertonschool-sysadmin_devops/276/xCmOCgw.gif'>
 
-task 4 - a script to Display current directory contents, including hidden files (starting with .). Use the long format.
+## Prerequisites
+- What is `HTTPS`?
+- What are the __2 main elements that SSL is providing__
+- `HAProxy` __SSL termination on__ `Ubuntu16.04`
+- __SSL termination__
+- __Bash function__
 
-task 5 - a script to Display current directory contents.
+## Tasks :heavy_check_mark:
 
-task 6 -  a script that creates a directory named my_first_directory in the /tmp/ directory
+- [0-world_wide_web](./0-world_wide_web)
+- [1-haproxy_ssl_termination](./1-haproxy_ssl_termination)
+- [100-redirect_http_to_https](./100-redirect_http_to_https)
 
-task 7 - a script to Move the file betty from /tmp/ to /tmp/my_first_directory.
+## Requirements
 
-task 8 - a script to Delete the file betty.
+- Allowed editors: `vi`, `vim`, `emacs`
+- All your files will be interpreted on `Ubuntu 16.04 LTS`
+- All your files should end with a new line
+- A README.md file, at the root of the folder of the project, is mandatory
+- All your Bash script files must be executable
+- Your Bash script must pass `Shellcheck (version 0.3.7)` without any error
+- The first line of all your Bash scripts should be exactly `#!/usr/bin/env bash`
+- The second line of all your Bash scripts should be a comment explaining what is the script doing
 
-task 9 - a script to Delete the directory my_first_directory that is in the /tmp directory.
+## Installing SSL Termination on Haproxy
+- Linux Distro: __Ubuntu 20.04 LTS__
+- HAProxy Version: __v2.4.3__
 
-task 10 - a script that changes the working directory to the previous one.
+```bash
 
-task 11 - a script that lists all files (even ones with names beginning with a period character, which are normally hidden) in the current directory and the parent of the working directory and the /boot directory (in this order), in long format.
+#if you already have haproxy installed do this
+$ sudo snap install --classic certbot
 
-task 12 - a script that prints the type of the file named iamafile. The file iamafile will be in the /tmp directory when we will run your script.
+# check if haproxy is installed, if yes stop haproxy
+$ sudo service haproxy stop
 
-task 13 - a script to Create a symbolic link to /bin/ls, named __ls__. The symbolic link should be created in the current working directory.
+# Install ssl using certbot
+$ sudo certbot certonly --standalone
 
-task 14 - a script that copies all the HTML files from the current working directory to the parent of the working directory, but only copy files that did not exist in the parent of the working directory or were newer than the versions in the parent of the working directory.
+# Follow the instrustions accurately, at the end please take note of the
+# Location of your SSL Keys. Usually going to default to the /etc/letsencrypt
+# directory. To view them do the below
+$ ls /etc/letsencrypt/live/domain_name/
 
-task 15 - a script that moves all files beginning with an uppercase letter to the directory /tmp/u.
+# Now concat your certificate .pem files to a single pem file and save them to
+# /etc/ssl/private
+$ cat cert_key_1 cert_key_2 > /etc/ssl/private/any_desired_name.pem
 
-task 16 -  a script that deletes all files in the current working directory that end with the character ~.
+# Now go to your haproxy config file to add a the path to your certificate
+# Then reload haproxy
+$ sudo service haproxy reload
+```
+_If you don't have HAProxy installed just copy and run this on your terminal and save yourself the hassle_
 
-task 17 - a script that creates the directories welcome/, welcome/to/ and welcome/to/school in the current directory.
+```
+$ wget -O haproxy https://github.com/sammykingx/alx-system_engineering-devops/raw/master/0x0F-load_balancer/install_haproxy_safely && bash haproxy
 
-task 18 - a script with a command that lists all the files and directories of the current directory, separated by commas (,).
-
-task 19  - a magic file school.mgc that can be used with the command file to detect School data files. School data files always contain the string SCHOOL at offset 0.
-
-
-That is all. Thank you.
+```
