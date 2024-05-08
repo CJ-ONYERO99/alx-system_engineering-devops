@@ -1,32 +1,49 @@
 #!/usr/bin/env bash
-# Configures a new ubuntu machine by installing
-# Nginx where it should be listening on port 80
-# Serve a page that would return a Hello World string
-#
 
-echo -e "Updating and installing Nginx.\n"
-sudo apt-get update -y -qq && \
-	 sudo apt-get install nginx -y
+# Update package lists
+apt-get update
 
-echo -e "\nSetting up some minor stuff.\n"
+# Install nginx
+apt-get install -y nginx
 
-# starting nginx service
-sudo service nginx start
+# Create a new user for Nginx processes
+useradd -r -s /sbin/nologin nginx
 
-# allowing nginx on firewall
-sudo ufw allow 'Nginx HTTP'
+# Create a directory for the website (owned by nginx user)
+mkdir -p /var/www/html && chown nginx:nginx /var/www/html
 
-# Give the user ownership to website files for easy editing
-sudo chown -R "$USER":"$USER" /var/www/html
-sudo chmod -R 755 /var/www
+# Create a backup directory for the default index
+mkdir -p /etc/nginx/backups
 
-# Backup default index
-cp /var/www/html/index.nginx-debian.html /var/www/html/index.nginx-debian.html.bckp
+# Create a new file for the default website (owned by nginx user)
+echo "server {
+  listen 80;
+  server_name localhost;
 
-# Creating new index
-echo -e "Hello World!" | dd status=none of=/var/www/html/index.nginx-debian.html
+  # Document root for the website (owned by nginx user)
+  root /var/www/html;
 
-# Restarting nginx
-sudo service nginx restart
+  # Return a simple "Hello World!" message
+  location / {
+    try_files \$uri /index.html;
+    index index.html index.htm;
+    add_header Content-Type text/html;
+    echo "Hello World!";
+  }
+}" > /etc/nginx/sites-available/default && chown nginx:nginx /etc/nginx/sites-available/default
 
-echo -e "\nCompleted. ✅\n"
+# Enable the default website configuration
+ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+
+# Backup the default index configuration before modification
+cp /etc/nginx/sites-available/default /etc/nginx/backups/default.$(date +%Y-%m-%d)
+
+# Reload nginx configuration without systemctl
+service nginx reload
+
+# Test if "Hello World!" is returned
+if [ "$(curl -s localhost)" == "Hello World!" ]; then
+  echo "Nginx is installed and configured successfully!"
+else
+  echo "Error: Nginx configuration might be incorrect."
+fi
