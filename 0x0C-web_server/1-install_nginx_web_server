@@ -1,49 +1,23 @@
 #!/usr/bin/env bash
+# Commands to install Nginx on Web-Sever-01
 
-# Update package lists
-apt-get update
+# Updating Packages before making Installations
+sudo apt-get update
 
-# Install nginx
-apt-get install -y nginx
+#Install Nginx
+sudo apt-get -y install nginx
 
-# Create a new user for Nginx processes
-useradd -r -s /sbin/nologin nginx
+# Configuring the Uncomplicated Firewall (UFW) to allow incoming traffic for the Nginx HTTP service
+sudo ufw allow 'Nginx HTTP'
 
-# Create a directory for the website (owned by nginx user)
-mkdir -p /var/www/html && chown nginx:nginx /var/www/html
+# Creating an index.html page
+echo "<html><body>Hello World!</body></html>" | sudo tee /var/www/html/index.html
 
-# Create a backup directory for the default index
-mkdir -p /etc/nginx/backups
+# Testing Nginx configurations for Syntax errors
+sudo nginx -t
 
-# Create a new file for the default website (owned by nginx user)
-echo "server {
-  listen 80;
-  server_name localhost;
+# Restarting Nginx
+sudo service nginx start
 
-  # Document root for the website (owned by nginx user)
-  root /var/www/html;
-
-  # Return a simple "Hello World!" message
-  location / {
-    try_files \$uri /index.html;
-    index index.html index.htm;
-    add_header Content-Type text/html;
-    echo "Hello World!";
-  }
-}" > /etc/nginx/sites-available/default && chown nginx:nginx /etc/nginx/sites-available/default
-
-# Enable the default website configuration
-ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
-
-# Backup the default index configuration before modification
-cp /etc/nginx/sites-available/default /etc/nginx/backups/default.$(date +%Y-%m-%d)
-
-# Reload nginx configuration without systemctl
-service nginx reload
-
-# Test if "Hello World!" is returned
-if [ "$(curl -s localhost)" == "Hello World!" ]; then
-  echo "Nginx is installed and configured successfully!"
-else
-  echo "Error: Nginx configuration might be incorrect."
-fi
+#Verify Nginx status
+curl localhost
