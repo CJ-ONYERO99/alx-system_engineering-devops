@@ -12,12 +12,12 @@ REDIRECT_URL="https://github.com/CJ-ONYERO99?tab=repositories"
 # Backup the original Nginx configuration (optional)
 cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak
 
-# Use sed to modify server block configuration for redirection
-sed -i "/server {/a \
-  location /redirect_me { \
-    return 301 $REDIRECT_URL; \
-  } \
-" /etc/nginx/nginx.conf
+# Use sed to modify server block configuration for redirection (modified)
+sed -i '/http {/a \
+  location /redirect_me { \
+    return 301 $REDIRECT_URL; \
+  } \
+' /etc/nginx/nginx.conf
 
 # Reload Nginx configuration
 service nginx reload
