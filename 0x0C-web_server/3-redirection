@@ -9,15 +9,15 @@ apt install -y nginx
 # Redirect configuration
 REDIRECT_URL="https://github.com/CJ-ONYERO99?tab=repositories"
 
-# Backup the original Nginx configuration (optional)
-cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak
+# Backup the original configuration (optional)
+cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default.bak
 
-# Use sed to modify server block configuration for redirection (modified)
-sed -i '/http {/a \
+# Use sed to modify server block configuration for redirection
+sed -i '/server {/a \
   location /redirect_me { \
     return 301 $REDIRECT_URL; \
   } \
-' /etc/nginx/nginx.conf
+' /etc/nginx/sites-available/default
 
 # Reload Nginx configuration
 service nginx reload
