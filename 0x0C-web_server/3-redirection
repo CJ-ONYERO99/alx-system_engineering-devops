@@ -23,13 +23,13 @@ if has_existing_redirect; then
   echo "Redirection for /redirect_me already exists in the configuration."
   # Option 1: Update existing redirection (modify as needed)
   sed -i '/location \/redirect_me / {  # Target existing location block
-    s/return 301 .*/return 301 "$REDIRECT_URL";/  # Update return directive with escaped URL (**double quotes**)
+    s/return 301 .*/return 301 "$REDIRECT_URL";/  # Update return directive with escaped URL
   }' /etc/nginx/sites-available/default
 else
   # Option 2: Add new redirection block (using sed)
   sed -i '/location /a \
     location /redirect_me {
-      set $REDIRECT_URL "$REDIRECT_URL";  # Escape the URL (no single quotes)
+      set $REDIRECT_URL "$REDIRECT_URL";  # Escape the URL
       return 301 $REDIRECT_URL;
     } \
   ' /etc/nginx/sites-available/default
