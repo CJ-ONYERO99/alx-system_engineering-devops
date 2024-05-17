@@ -7,7 +7,7 @@ apt update
 # Install Nginx web server
 apt install -y nginx
 
-# Define the redirect URL (replace with your desired URL)
+# Define the redirect URL
 REDIRECT_URL="https://github.com/CJ-ONYERO99"  # Adjust this line
 
 # Backup the original configuration (optional)
@@ -37,3 +37,6 @@ fi
 service nginx reload
 
 echo "Redirection configured for /redirect_me to $REDIRECT_URL"
+
+# Verify redirection
+curl -sI localhost/redirect_me/ && echo "Redirection seems to be configured correctly." || echo "Redirection might not be working. Check error logs."
