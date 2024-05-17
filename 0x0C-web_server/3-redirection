@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
 # Script to configure Nginx for redirection.
 
-# Update package lists
-apt update
+# Updating Packages before making Installations
+sudo apt-get update
 
-# Install Nginx web server
-apt install -y nginx
+#Install Nginx
+sudo apt-get -y install nginx
+
+# Configuring the Uncomplicated Firewall (UFW) to allow incoming traffic for the Nginx HTTP service
+sudo ufw allow 'Nginx HTTP'
 
 # Define the redirect URL
 REDIRECT_URL="https://github.com/CJ-ONYERO99"  # Adjust this line
