@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 # Script to configure Nginx for redirection.
+
 # Update package lists
 apt update
 
 # Install Nginx web server
 apt install -y nginx
 
-# Define the redirect URL
+# Define the redirect URL (replace with your desired URL)
 REDIRECT_URL="https://github.com/CJ-ONYERO99"  # Adjust this line
 
 # Backup the original configuration (optional)
@@ -22,13 +23,13 @@ if has_existing_redirect; then
   echo "Redirection for /redirect_me already exists in the configuration."
   # Option 1: Update existing redirection (modify as needed)
   sed -i '/location \/redirect_me / {  # Target existing location block
-    s/return 301 .*/return 301 '"'"$REDIRECT_URL"'"';/  # Update return directive
+    s/return 301 .*/return 301 "$REDIRECT_URL";/  # Update return directive with escaped URL (**removed single quotes**)
   }' /etc/nginx/sites-available/default
 else
   # Option 2: Add new redirection block (using sed)
   sed -i '/location /a \
     location /redirect_me { \
-      set $REDIRECT_URL "'"$REDIRECT_URL"'";  # Escape the URL with quotes and single quotes
+      set $REDIRECT_URL "$REDIRECT_URL";  # Escape the URL (no single quotes) (**removed single quotes**)
       return 301 $REDIRECT_URL; \
     } \
   ' /etc/nginx/sites-available/default
