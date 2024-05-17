@@ -6,23 +6,35 @@ apt update
 # Install Nginx web server
 apt install -y nginx
 
-# Redirect configuration
-REDIRECT_URL="https://github.com/CJ-ONYERO99?tab=repositories"
+# Define the redirect URL
+REDIRECT_URL="https://github.com/CJ-ONYERO99"  # Adjust this line
 
 # Backup the original configuration (optional)
 cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default.bak
 
-# Use sed to modify server block configuration for redirection
-sed -i '/server {/a \
-  location /redirect_me { \
-    return 301 $REDIRECT_URL; \
-  } \
-' /etc/nginx/sites-available/default
+# Function to check for existing redirection block
+has_existing_redirect() {
+  grep -q '^location /redirect_me {' /etc/nginx/sites-available/default
+}
+
+# Check if redirection block already exists
+if has_existing_redirect; then
+  echo "Redirection for /redirect_me already exists in the configuration."
+  # Option 1: Update existing redirection (modify as needed)
+  sed -i '/location \/redirect_me / {  # Target existing location block
+    s/return 301 .*/return 301 '"'"$REDIRECT_URL"'"';/  # Update return directive
+  }' /etc/nginx/sites-available/default
+else
+  # Option 2: Add new redirection block (using sed)
+  sed -i '/location /a \
+    location /redirect_me { \
+      set $REDIRECT_URL "'"$REDIRECT_URL"'";  # Escape the URL with quotes and single quotes
+      return 301 $REDIRECT_URL; \
+    } \
+  ' /etc/nginx/sites-available/default
+fi
 
 # Reload Nginx configuration
 service nginx reload
-
-# Test the redirection with curl
-curl -sI http://localhost/redirect_me/
 
 echo "Redirection configured for /redirect_me to $REDIRECT_URL"
