@@ -42,4 +42,5 @@ service nginx reload
 echo "Redirection configured for /redirect_me to $REDIRECT_URL"
 
 # Verify redirection
-curl -sI localhost/redirect_me/ && echo "Redirection seems to be configured correctly." || echo "Redirection might not be working. Check error logs."
+curl -sI 18.235.255.90/redirect_me/
+curl -sI 18.235.255.90/redirect_me/ && echo "Redirection seems to be configured correctly." || echo "Redirection might not be working. Check error logs."
