@@ -1,24 +1,33 @@
 #!/usr/bin/env bash
+
 # Update Nginx package lists
 sudo apt-get update
 
-# Check if Nginx is already installed (informative)
+# Check if Nginx is already installed
 if [[ $(dpkg-query -l nginx | grep installed) ]]; then
   echo "Nginx is already installed."
 else
   # Install Nginx if not present
-  sudo apt-get install -y nginx
+  echo "Installing Nginx..."
+  sudo apt-get install -y nginx || {
+    echo "Error installing Nginx. Please check package repositories and try again."
+    exit 1
+  }
 fi
 
 # Add custom response header (X-Served-By)
-sudo sed -i "/server_name _/a add_header X-Served-By $HOSTNAME;" /etc/nginx/sites-enabled/default
+# Escape potential special characters in hostname
+escaped_hostname=$(echo "$HOSTNAME" | sed 's/[^\w\-_]//g')
+sudo sed -i "/server_name _/a add_header X-Served-By $escaped_hostname;" /etc/nginx/sites-enabled/default
 
 # Test Nginx configuration for errors
-sudo nginx -t
+sudo nginx -t || {
+  echo "Error in Nginx configuration. Please check the logs (/etc/nginx/error.log) and make corrections."
+  exit 1
+}
 
-# Check systemd availability (use appropriate restart command)
-if systemctl status systemd &> /dev/null; then
-  sudo systemctl restart nginx
-else
-  sudo service nginx restart
-fi
+# Restart and Reload Nginx
+sudo service nginx reload
+sudo service nginx restart
+
+echo "Nginx configuration complete!"
