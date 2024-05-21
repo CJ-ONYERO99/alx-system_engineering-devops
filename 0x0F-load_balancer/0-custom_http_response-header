@@ -18,8 +18,13 @@ fi
 escaped_hostname=$(hostname | sed 's/[^\w\-_]//g')
 sudo sed -i "/server_name _/a add_header X-Served-By \$hostname;" /etc/nginx/sites-available/default
 
-# Create a symbolic link from sites-available to sites-enabled
-sudo ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
+# Create a symbolic link from sites-available to sites-enabled if not already linked
+if [[ ! -e /etc/nginx/sites-enabled/default ]]; then
+  sudo ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
+  echo "Nginx configuration linked to sites-enabled."
+else
+  echo "Nginx configuration is already linked in sites-enabled."
+fi
 
 # Test Nginx configuration for errors
 sudo nginx -t || {
@@ -29,7 +34,6 @@ sudo nginx -t || {
 
 # Reload Nginx
 sudo service nginx reload
-sudo service nginx restart
 
 echo "Nginx configuration complete!"
 
