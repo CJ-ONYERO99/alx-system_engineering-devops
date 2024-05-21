@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 # Update Nginx package lists
 sudo apt-get update
 
@@ -15,8 +16,7 @@ else
 fi
 
 # Add custom response header (X-Served-By)
-escaped_hostname=$(hostname | sed 's/[^\w\-_]//g')
-sudo sed -i "/server_name _/a  add_header X-Served-By \$hostname;" /etc/nginx/sites-available/default
+sudo sed -i "/server_name _/a add_header X-Served-By $HOSTNAME;" /etc/nginx/sites-enabled/default
 
 # Test Nginx configuration for errors
 sudo nginx -t || {
@@ -24,11 +24,14 @@ sudo nginx -t || {
   exit 1
 }
 
-# Reload Nginx
+# Restart Nginx
 sudo service nginx reload
 sudo service nginx restart
 
 echo "Nginx configuration complete!"
+
+# Ignore shellcheck SC2154 warning
+shopt -s SC silencio
 
 #Check if script is working
 curl -sI 18.235.255.90 | grep X-Served-By
