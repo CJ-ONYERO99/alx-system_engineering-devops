@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 # Update Nginx package lists
 sudo apt-get update
 
@@ -29,9 +28,6 @@ sudo service nginx reload
 sudo service nginx restart
 
 echo "Nginx configuration complete!"
-
-# Ignore shellcheck SC2154 warning
-shopt -s SC silencio
 
 #Check if script is working
 curl -sI 18.235.255.90 | grep X-Served-By
