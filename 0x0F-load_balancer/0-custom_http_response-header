@@ -16,7 +16,7 @@ fi
 
 # Add custom response header (X-Served-By)
 escaped_hostname=$(hostname | sed 's/[^\w\-_]//g')
-sudo sed -i "/server_name _/a add_header X-Served-By \$hostname;" /etc/nginx/sites-available/default
+sudo sed -i "/server_name _/a  add_header X-Served-By \$hostname;" /etc/nginx/sites-available/default
 
 # Create a symbolic link from sites-available to sites-enabled if not already linked
 if [[ ! -e /etc/nginx/sites-enabled/default ]]; then
