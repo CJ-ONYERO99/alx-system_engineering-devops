@@ -16,9 +16,8 @@ else
 fi
 
 # Add custom response header (X-Served-By)
-# Escape potential special characters in hostname
-escaped_hostname=$(echo "$HOSTNAME" | sed 's/[^\w\-_]//g')
-sudo sed -i "/server_name _/a add_header X-Served-By $escaped_hostname;" /etc/nginx/sites-enabled/default
+escaped_hostname=$(hostname | sed 's/[^\w\-_]//g')
+sudo sed -i "/server_name _/a add_header X-Served-By \$hostname;" /etc/nginx/sites-enabled/default
 
 # Test Nginx configuration for errors
 sudo nginx -t || {
@@ -26,8 +25,7 @@ sudo nginx -t || {
   exit 1
 }
 
-# Restart and Reload Nginx
+# Reload Nginx
 sudo service nginx reload
-sudo service nginx restart
 
 echo "Nginx configuration complete!"
