@@ -30,4 +30,4 @@ sudo service nginx restart
 echo "Nginx configuration complete!"
 
 #Check if script is working
-curl -sI 18.235.255.90 | grep X-Served-By
+curl -sI localhost | grep X-Served-By
