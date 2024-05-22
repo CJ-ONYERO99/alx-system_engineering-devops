@@ -43,4 +43,4 @@ sudo service nginx restart
 sudo echo "Redirection configured for /redirect_me to $REDIRECT_URL"
 
 # Verify redirection
-sudo curl -sI 18.235.255.90/redirect_me/ && echo "Redirection seems to be configured correctly." || echo "Redirection might not be working. Check error logs."
+sudo curl -sI localhost/redirect_me/ && echo "Redirection seems to be configured correctly." || echo "Redirection might not be working. Check error logs."
