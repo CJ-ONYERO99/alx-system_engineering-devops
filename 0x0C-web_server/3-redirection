@@ -11,16 +11,15 @@ sudo apt-get -y install nginx
 sudo ufw allow 'Nginx HTTP'
 
 # Define the redirect URL
-REDIRECT_URL='https://github.com/CJ-ONYERO99'
+REDIRECT_URL='(link unavailable)'
 
 # Backup the original configuration (optional)
 sudo cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default.bak
 
-# Add new redirection block (using sed)
-sudo sed -r -i '~^location \/ {~a \
-    location /redirect_me {
-      return 301 '$REDIRECT_URL';
-    }' /etc/nginx/sites-available/default
+# Add new redirection block
+sudo echo "location /redirect_me {
+    return 301 $REDIRECT_URL;
+}" | sudo tee -a /etc/nginx/sites-available/default
 
 # Reload Nginx configuration
 sudo service nginx reload
