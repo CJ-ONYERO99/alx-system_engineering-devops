@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+#Script to configure nginx
 
 # Install Nginx
 sudo apt-get update
@@ -27,4 +28,4 @@ sudo nginx -t
 echo "Redirection configured"
 
 # Verify redirection
-sudo curl -sI http://34.224.16.161/redirect_me/ && echo
+sudo curl -sI http://localhost/redirect_me/ && echo
