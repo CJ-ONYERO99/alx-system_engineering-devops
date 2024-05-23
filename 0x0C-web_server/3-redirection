@@ -7,8 +7,6 @@ sudo apt-get -y install nginx
 # Configure the Uncomplicated Firewall (UFW) to allow incoming traffic for the Nginx HTTP service
 sudo ufw allow 'Nginx HTTP'
 
-sudo cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default.bakup
-
 echo "Hello World!" | sudo tee /var/www/html/index.html > /dev/null
 
 # Configure Nginx redirection using sed
