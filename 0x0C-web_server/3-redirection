@@ -11,30 +11,16 @@ sudo apt-get -y install nginx
 sudo ufw allow 'Nginx HTTP'
 
 # Define the redirect URL
-REDIRECT_URL="https://github.com/CJ-ONYERO99"
+REDIRECT_URL='https://github.com/CJ-ONYERO99'
 
 # Backup the original configuration (optional)
 sudo cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default.bak
 
-# Function to check for existing redirection block
-has_existing_redirect() {
-  grep -q '^location /redirect_me {' /etc/nginx/sites-available/default
-}
-
-# Check if redirection block already exists
-if has_existing_redirect; then
-  echo "Redirection for /redirect_me already exists in the configuration."
-  # Update existing redirection (modify as needed)
-  sudo sed -i "/location \/redirect_me / {
-    s/return 301 .*/return 301 \$REDIRECT_URL;/  # Update return directive with escaped URL
-  }" /etc/nginx/sites-available/default
-else
-  # Add new redirection block (using sed)
-  sudo sed -i "/location /a \
+# Add new redirection block (using sed)
+sudo sed -r -i '/^location \/ {/a \
     location /redirect_me {
-      return 301 \$REDIRECT_URL;
-    }" /etc/nginx/sites-available/default
-fi
+      return 301 '$REDIRECT_URL';
+    }' /etc/nginx/sites-available/default
 
 # Reload Nginx configuration
 sudo service nginx reload
@@ -43,4 +29,4 @@ sudo service nginx restart
 echo "Redirection configured for /redirect_me to $REDIRECT_URL"
 
 # Verify redirection
-sudo curl -sI localhost/redirect_me/ && echo "Redirection seems to be configured correctly." || echo "Redirection might not be working. Check error logs."
+sudo curl -sI localhost/redirect_me/ && echo
