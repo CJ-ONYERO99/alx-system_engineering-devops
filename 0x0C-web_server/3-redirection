@@ -11,7 +11,7 @@ sudo apt-get -y install nginx
 sudo ufw allow 'Nginx HTTP'
 
 # Define the redirect URL
-REDIRECT_URL='(link unavailable)'
+REDIRECT_URL='https://github.com/CJ-ONYERO99'
 
 # Backup the original configuration (optional)
 sudo cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default.bak
