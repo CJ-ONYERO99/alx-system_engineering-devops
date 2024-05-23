@@ -9,12 +9,20 @@ sudo ufw allow 'Nginx HTTP'
 
 echo "Hello World!" | sudo tee /var/www/html/index.html > /dev/null
 
-# Configure Nginx redirection using sed
-sudo sed -i '/^server {/a \ \ \ \ location \/redirect_me { \n \ \ \ \ \ \ return 301 https:\/\/github.com\/CJ-ONYERO99; \n \ \ \ \ }' /etc/nginx/sites-available/default
+# Check if the redirection block already exists
+if ! grep -q 'location /redirect_me' /etc/nginx/sites-available/default; then
+  # Configure Nginx redirection using sed
+  sudo sed -i '/^server {/a \ \ \ \ location \/redirect_me { \n \ \ \ \ \ \ return 301 https:\/\/github.com\/CJ-ONYERO99; \n \ \ \ \ }' /etc/nginx/sites-available/default
+else
+  echo "Redirection block already exists in the Nginx configuration."
+fi
 
 # Reload Nginx configuration
 sudo service nginx reload
 sudo service nginx restart
+
+#check for errors
+sudo nginx -t
 
 echo "Redirection configured"
 
