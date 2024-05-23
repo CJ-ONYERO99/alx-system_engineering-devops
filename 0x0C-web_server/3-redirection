@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# A redirection script.
+
 # Install Nginx
 sudo apt-get update
 sudo apt-get -y install nginx
@@ -11,7 +11,7 @@ sudo ufw allow 'Nginx HTTP'
 REDIRECT_URL='https://github.com/CJ-ONYERO99'
 
 # Replace the existing server block in the Nginx configuration file with a new one that includes the redirection
-sudo sed -i '/server {/,/}/{ /server {/{p; s/}/{\n    location /redirect_me {\n        return 301 '$REDIRECT_URL';\n    }/\n}/; d; }' /etc/nginx/sites-available/default
+sudo sed -i 's/server {.*,}/&\n    location /redirect_me {\n        return 301 '$REDIRECT_URL';\n    }/' /etc/nginx/sites-available/default
 
 # Reload Nginx configuration
 sudo service nginx reload
@@ -20,4 +20,4 @@ sudo service nginx restart
 echo "Redirection configured for /redirect_me to $REDIRECT_URL"
 
 # Verify redirection
-sudo curl -sI localhost/redirect_me/ && echo
+sudo curl -sI http://34.224.16.161/redirect_me/ && echo
