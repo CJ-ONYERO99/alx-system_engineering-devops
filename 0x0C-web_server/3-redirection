@@ -11,9 +11,8 @@ sudo cp /etc/nginx/sites-available/default /etc/nginx/sites-available/default.ba
 
 echo "Hello World!" | sudo tee /var/www/html/index.html > /dev/null
 
-NEW_RULE="\\\n\tlocation = /redirect_me {\n\t\t return 301 https://www.youtube.com/@sammykingx;\n\t}\n"
-
-sudo sed -i "53i $NEW_RULE" /etc/nginx/sites-available/default
+# Configure Nginx redirection using sed
+sudo sed -i '/^server {/a \ \ \ \ location \/redirect_me { \n \ \ \ \ \ \ return 301 https:\/\/github.com\/CJ-ONYERO99; \n \ \ \ \ }' /etc/nginx/sites-available/default
 
 # Reload Nginx configuration
 sudo service nginx reload
