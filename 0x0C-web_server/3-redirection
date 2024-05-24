@@ -13,7 +13,7 @@ echo "Hello World!" | sudo tee /var/www/html/index.html > /dev/null
 # Check if the redirection block already exists
 if ! grep -q 'location /redirect_me' /etc/nginx/sites-available/default; then
   # Configure Nginx redirection using sed
-  sudo sed -i "/server_name 18.235.255.90;/a\
+  sudo sed -i "/server_name _;/a\
         \
         location /redirect_me {\
             return 301 https://github.com/CJ-ONYERO99;\
