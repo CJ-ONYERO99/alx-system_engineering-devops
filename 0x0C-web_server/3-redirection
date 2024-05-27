@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#Script to configure nginx
+# Script to configure Nginx
 
 # Install Nginx
 sudo apt-get update
@@ -8,19 +8,20 @@ sudo apt-get -y install nginx
 # Configure the Uncomplicated Firewall (UFW) to allow incoming traffic for the Nginx HTTP service
 sudo ufw allow 'Nginx HTTP'
 
+# Create an "Hello World!" index page
 echo "Hello World!" | sudo tee /var/www/html/index.html > /dev/null
 
 # Check if the redirection block already exists
 if ! grep -q 'location /redirect_me' /etc/nginx/sites-available/default; then
-  # Configure Nginx redirection using sed
-  sudo sed -i '/^server_name _;/a \ \ \ \ location \/redirect_me { \n \ \ \ \ \ \ return 301 https:\/\/github.com\/CJ-ONYERO99; \n \ \ \ \ }' /etc/nginx/sites-available/default
+    # Configure Nginx redirection using sed
+    sudo sed -i '/^server_name _;/a \ \ \ \ location \/redirect_me { \n \ \ \ \ \ \ return 301 https:\/\/github.com\/CJ-ONYERO99; \n \ \ \ \ }' /etc/nginx/sites-available/default
 else
-  echo "Redirection block already exists in the Nginx configuration."
+    echo "Redirection block already exists in the Nginx configuration."
 fi
 
 # Reload Nginx configuration
-sudo systemctl reload nginx
-sudo systemctl restart nginx
+sudo service nginx reload
+sudo service nginx restart
 
 # Check for errors
 sudo nginx -t
@@ -28,4 +29,4 @@ sudo nginx -t
 echo "Redirection configured"
 
 # Verify redirection
-sudo curl -sI http://localhost/redirect_me/ && echo
+sudo curl -sI http://18.235.255.90/redirect_me/ && echo
