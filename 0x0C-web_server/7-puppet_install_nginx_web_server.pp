@@ -1,22 +1,41 @@
+# Script to install nginx using puppet
 
-# Automating project requirements using Puppet
-
-package { 'nginx':
-  ensure => installed,
+exec { 'apt-get update':
+  command => '/usr/bin/apt-get update',
 }
 
-file_line { 'install':
-  ensure => 'present',
-  path   => '/etc/nginx/sites-enabled/default',
-  after  => 'listen 80 default_server;',
-  line   => 'rewrite ^/redirect_me https://www.github.com/besthor permanent;',
+package { 'nginx':
+  ensure  => installed,
+  require => Exec['apt-get update'],
 }
 
 file { '/var/www/html/index.html':
+  ensure  => file,
   content => 'Hello World!',
+  require => Package['nginx'],
+}
+
+file_line { 'configure_nginx_listen':
+  path    => '/etc/nginx/sites-available/default',
+  line    => '        listen 80;',
+  match   => '^[ \t]*listen[ \t]+\*:80;',
+  require => Package['nginx'],
+}
+
+file_line { 'configure_nginx_redirect':
+  path    => '/etc/nginx/sites-available/default',
+  line    => '        return 301 https://github.com/CJ-ONYERO99;',
+  after   => 'location /redirect_me {',
+  require => Package['nginx'],
 }
 
 service { 'nginx':
-  ensure  => running,
-  require => Package['nginx'],
+  ensure     => running,
+  enable     => true,
+  hasrestart => true,
+  require    => [
+    File['/var/www/html/index.html'],
+    File_line['configure_nginx_listen'],
+    File_line['configure_nginx_redirect'],
+  ],
 }
