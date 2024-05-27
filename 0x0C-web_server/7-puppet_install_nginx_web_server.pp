@@ -1,41 +1,24 @@
 # Script to install nginx using puppet
 
-exec { 'apt-get update':
-  command => '/usr/bin/apt-get update',
+package {'nginx':
+  ensure => 'present',
 }
 
-package { 'nginx':
-  ensure  => installed,
-  require => Exec['apt-get update'],
+exec {'install':
+  command  => 'sudo apt-get update ; sudo apt-get -y install nginx',
+  provider => shell,
 }
 
-file { '/var/www/html/index.html':
-  ensure  => file,
-  content => 'Hello World!',
-  require => Package['nginx'],
+exec {'Hello World!':
+  command  => 'echo "Hello World!" | sudo dd status=none of=/var/www/html/index.html',
+  provider => shell,
 }
 
-file_line { 'configure_nginx_listen':
-  path    => '/etc/nginx/sites-available/default',
-  line    => '        listen 80;',
-  match   => '^[ \t]*listen[ \t]+\*:80;',
-  require => Package['nginx'],
+exec {'sudo sed -i "s/listen 80 default_server;/listen 80 default_server;\\n\\tlocation \/redirect_me {\\n\\t\\treturn 301 https:\/\/www.youtube.com\/;\\n\\t}/" /etc/nginx/sites-available/default':
+  provider => shell,
 }
 
-file_line { 'configure_nginx_redirect':
-  path    => '/etc/nginx/sites-available/default',
-  line    => '        return 301 https://github.com/CJ-ONYERO99;',
-  after   => 'location /redirect_me {',
-  require => Package['nginx'],
-}
-
-service { 'nginx':
-  ensure     => running,
-  enable     => true,
-  hasrestart => true,
-  require    => [
-    File['/var/www/html/index.html'],
-    File_line['configure_nginx_listen'],
-    File_line['configure_nginx_redirect'],
-  ],
+exec {'run':
+  command  => 'sudo service nginx restart',
+  provider => shell,
 }
