@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 # Set logging variables
 LOG_FILE=/var/log/haproxy_setup.log
 LOG_LEVEL=INFO
