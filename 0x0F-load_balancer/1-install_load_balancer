@@ -1,13 +1,26 @@
 #!/usr/bin/env bash
+
+# Set logging variables
+LOG_FILE=/var/log/haproxy_setup.log
+LOG_LEVEL=INFO
+
 # Install HAProxy
-apt-get update
-apt-get install -y haproxy
+apt-get update && apt-get install -y haproxy || {
+  log_error "HAProxy installation failed"
+  exit 1
+}
 
 # Backup the default configuration file
-cp /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg.bak
+cp /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg.bak || {
+  log_error "Failed to backup default configuration file"
+  exit 1
+}
 
 # Configure HAProxy
-cat <<EOF > /etc/haproxy/haproxy.cfg
+cat <<EOF > /etc/haproxy/haproxy.cfg || {
+  log_error "Failed to write HAProxy configuration file"
+  exit 1
+}
 global
     log /dev/log    local0
     log /dev/log    local1 notice
@@ -39,10 +52,28 @@ backend http_back
 EOF
 
 # Verify HAProxy configuration
-haproxy -c -f /etc/haproxy/haproxy.cfg
+haproxy -c -f /etc/haproxy/haproxy.cfg || {
+  log_error "HAProxy configuration verification failed"
+  exit 1
+}
 
 # Restart HAProxy
-service haproxy restart
+service haproxy restart || {
+  log_error "HAProxy restart failed"
+  exit 1
+}
 
 # Enable HAProxy to be managed via init script
-update-rc.d haproxy defaults
+update-rc.d haproxy defaults || {
+  log_error "Failed to enable HAProxy init script"
+  exit 1
+}
+
+# Logging functions
+log_error() {
+  echo "$(date) [ERROR] $1" >> $LOG_FILE
+}
+
+log_info() {
+  echo "$(date) [INFO] $1" >> $LOG_FILE
+}
