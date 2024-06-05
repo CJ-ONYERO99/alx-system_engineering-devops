@@ -1,0 +1,17 @@
+
+defaults
+  mode http
+  timeout client 15s
+  timeout connect 10s
+  timeout server 15s
+  timeout http-request 10s
+
+frontend cyberionetics.tech
+    bind *:80
+    default_backend web_servers
+
+backend web_servers
+    balance roundrobin
+    server 428422-web-01 18.235.255.90:80 check
+    server 428422-web-02 34.224.16.161:80 check
+
