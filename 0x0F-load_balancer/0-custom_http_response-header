@@ -32,3 +32,4 @@ echo "Nginx configuration complete!"
 curl -sI localhost | grep X-Served-By
 
 # }
+
