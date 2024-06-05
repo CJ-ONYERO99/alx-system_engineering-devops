@@ -12,10 +12,9 @@ else
     echo "Error installing Nginx. Please check package repositories and try again."
     exit 1
   }
-fi
 
-# Add custom response header (X-Served-By)
-sudo sed -i "/server_name _/a add_header X-Served-By $HOSTNAME;" /etc/nginx/sites-enabled/default
+# Configure custom HTTP response header
+sudo sed -i 's/server {/,server {\n    add_header X-Served-By '$(hostname)';/' /etc/nginx/sites-available/default
 
 # Test Nginx configuration for errors
 sudo nginx -t || {
@@ -31,3 +30,4 @@ echo "Nginx configuration complete!"
 
 #Check if script is working
 curl -sI localhost | grep X-Served-By
+#
