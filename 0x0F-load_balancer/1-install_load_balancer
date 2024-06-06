@@ -77,3 +77,4 @@ log_info() {
   echo "$(date) [INFO] $1" >> $LOG_FILE
 }
 sudo service haproxy start
+
