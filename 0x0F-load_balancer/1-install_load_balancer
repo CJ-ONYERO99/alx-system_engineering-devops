@@ -3,6 +3,15 @@
 LOG_FILE=/var/log/haproxy_setup.log
 LOG_LEVEL=INFO
 
+# Logging functions
+log_error() {
+  echo "$(date) [ERROR] $1" >> $LOG_FILE
+}
+
+log_info() {
+  echo "$(date) [INFO] $1" >> $LOG_FILE
+}
+
 # Install HAProxy
 apt-get update && apt-get install -y haproxy || {
   log_error "HAProxy installation failed"
@@ -68,12 +77,4 @@ update-rc.d haproxy defaults || {
   exit 1
 }
 
-# Logging functions
-log_error() {
-  echo "$(date) [ERROR] $1" >> $LOG_FILE
-}
-
-log_info() {
-  echo "$(date) [INFO] $1" >> $LOG_FILE
-}
 sudo service haproxy start
