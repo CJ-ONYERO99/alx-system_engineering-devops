@@ -25,38 +25,37 @@ cp /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg.bak || {
 }
 
 # Configure HAProxy
-cat <<EOF > /etc/haproxy/haproxy.cfg || {
+cat <<EOF >> /etc/haproxy/haproxy.cfg || {
   log_error "Failed to write HAProxy configuration file"
   exit 1
 }
-global
-    log /dev/log    local0
-    log /dev/log    local1 notice
-    chroot /var/lib/haproxy
-    stats socket /run/haproxy/admin.sock mode 660 level admin
-    stats timeout 30s
-    user haproxy
-    group haproxy
-    daemon
+    global
+        log /dev/log    local0
+        log /dev/log    local1 notice
+        chroot /var/lib/haproxy
+        stats socket /run/haproxy/admin.sock mode 660 level admin
+        stats timeout 30s
+        user haproxy
+        group haproxy
+        daemon
 
-defaults
-    log     global
-    mode    http
-    option  httplog
-    option  dontlognull
-    timeout connect 5000
-    timeout client  50000
-    timeout server  50000
+    defaults
+        log     global
+        mode    http
+        option  httplog
+        option  dontlognull
+        timeout connect 5000
+        timeout client  50000
+        timeout server  50000
 
-frontend http_front
-    bind *:80
-    default_backend http_back
+    frontend http_front
+        bind *:80
+        default_backend http_back
 
-backend http_back
-    balance roundrobin
-    server 428422-web-01 18.235.255.90:80 check
-    server 428422-web-02 34.224.16.161:80 check
-
+    backend http_back
+        balance roundrobin
+        server 428422-web-01 18.235.255.90:80 check
+        server 428422-web-02 34.224.16.161:80 check
 EOF
 
 # Verify HAProxy configuration
@@ -79,3 +78,4 @@ update-rc.d haproxy defaults || {
 
 sudo service haproxy start
 
+}
