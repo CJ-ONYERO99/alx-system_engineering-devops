@@ -26,7 +26,7 @@ The root cause was a misconfigured replication lag setting, set to 1 hour instea
 | 14:45    | Misleading path: suspected database version issue.                                               |
 | 14:45    | Investigation: spent 20 minutes reviewing version release notes and testing downgrade.           |
 | 15:00    | Escalated to senior engineer (DB expert).                                                        |
-           | Fresh perspective: reviewed replication settings and noticed misconfiguration.                   |
+|           | Fresh perspective: reviewed replication settings and noticed misconfiguration.                   |
 | 15:20    | Root cause identified: misconfigured replication lag (set to 1hr instead of 1min).               |
 | 15:30    | Fix applied: adjusted replication lag settings to 1 min.                                         |
 | 15:45    | Verification and testing: monitored database performance and error rates.                        |
