@@ -42,8 +42,8 @@ The fix involved adjusting the replication lag settings to ensure timely data sy
 ![](https://cdn-ccchn.nitrocdn.com/eoxXytShChgscESECFYcqdYPaOaOGMwn/assets/images/optimized/rev-fbc0c0e/wp-content/uploads/2021/06/prevent-incidents.png)
 
 -Improve database monitoring and alerting:
-    Adjust alert thresholds for latency and error rates.
-    Add monitoring for replication lag and data synchronization.
+ Adjust alert thresholds for latency and error rates.
+ Add monitoring for replication lag and data synchronization.
     
 -Implement automated replication lag checks:
     Schedule daily checks for replication lag settings.
