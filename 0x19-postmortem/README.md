@@ -42,22 +42,25 @@ The fix involved adjusting the replication lag settings to ensure timely data sy
 ![](https://cdn-ccchn.nitrocdn.com/eoxXytShChgscESECFYcqdYPaOaOGMwn/assets/images/optimized/rev-fbc0c0e/wp-content/uploads/2021/06/prevent-incidents.png)
 
 -Improve database monitoring and alerting:
-    Adjust alert thresholds for latency and error rates
-    Add monitoring for replication lag and data synchronization
+    Adjust alert thresholds for latency and error rates.
+    Add monitoring for replication lag and data synchronization.
+    
 -Implement automated replication lag checks:
-    Schedule daily checks for replication lag settings
-    Alert the DB team of any discrepancies
+    Schedule daily checks for replication lag settings.
+    Alert the DB team of any discrepancies.
+    
 -Schedule regular database performance reviews:
-    Bi-weekly reviews of database performance and error rates
-    Identify and address potential issues before they become incidents
+    Bi-weekly reviews of database performance and error rates.
+    Identify and address potential issues before they become incidents.
+    
 -Add documentation on replication lag best practices:
-    Update database setup guide with replication lag settings
-    Include troubleshooting steps for replication lag issues
+    Update database setup guide with replication lag settings.
+    Include troubleshooting steps for replication lag issues.
 
 ## TODOs
--Patch database servers with the latest updates (v12.2)
--Add memory monitoring to database servers
--Review and refine database replication settings
--Document the incident and share it with the team (this postmortem)
+-Patch database servers with the latest updates (v12.2).
+-Add memory monitoring to database servers.
+-Review and refine database replication settings.
+-Document the incident and share it with the team (this postmortem).
 
 This postmortem highlights the importance of thorough investigation, collaboration, and knowledge sharing in resolving complex issues. By sharing our experience, we aim to enhance our collective knowledge and improve our systems' reliability.
